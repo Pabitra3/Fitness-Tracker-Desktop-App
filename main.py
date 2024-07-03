@@ -104,7 +104,7 @@ class FitTrack(QWidget):
         self.add_btn.clicked.connect(self.add_workout)
         self.delete_btn.clicked.connect(self.delete_workout)
         self.submit_btn.clicked.connect(self.calculate_calories)
-        self.dark_mode.stateChanged.connect(self.toggle_dark)
+        self.dark_mode.clicked.connect(self.toggle_dark)
     
     
     # Load Tables
