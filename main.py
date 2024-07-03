@@ -120,7 +120,7 @@ class FitTrack(QWidget):
             date = query.value(1)
             calories = query.value(2)
             distance = query.value(3)
-            description = query.vlaue(4)
+            description = query.value(4)
 
             self.table.insertRow(row)
             self.table.setItem(row, 0, QTableWidgetItem(str(fit_id)))
