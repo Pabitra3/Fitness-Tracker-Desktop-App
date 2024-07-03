@@ -102,6 +102,7 @@ class FitTrack(QWidget):
     def button_click(self):
         self.add_btn.clicked.connect(self.add_workout)
         self.delete_btn.clicked.connect(self.delete_workout)
+        self.submit_btn.clicked.connect(self.calculate_calories)
     
     
     # Load Tables
@@ -169,7 +170,35 @@ class FitTrack(QWidget):
         self.load_table()
     
     # Calculate Calories
-    
+    def calculate_calories(self):
+        distances = []
+        calories = []
+
+        query = QSqlQuery("SELECT distance, calories FROM fitness ORDER BY calories ASC")
+        while query.next():
+            distance = query.value(0)
+            calorie = query.value(1)
+            distances.append(distance)
+            calories.append(calorie)
+
+        try:
+            min_calorie = min(calories)
+            max_calories = max(calories)
+            normalized_calories = [(calorie - min_calorie) / (max_calories - min_calorie) for calorie in calories]
+
+            plt.style.use("Solarize_Light2")
+            ax = self.figure.subplots()
+            ax.scatter(distances, calories, c=normalized_calories, cmap="viridis", label="Data Points")
+            ax.set_title("Distance Vs. Calories")
+            ax.set_xlabel("Distance")
+            ax.set_ylabel("Calories")
+            cbar = ax.figure.colorbar(ax.collections[0], label="Normalized Calories")
+            ax.legend()
+            self.canvas.draw()
+
+        except Exception as e:
+            print("ERROR:{e}")
+            QMessageBox.warning(self,"Error","Please enter some data first!")        
 
     # Click
 
