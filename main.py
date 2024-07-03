@@ -14,7 +14,14 @@ from sys import exit
 class FitTrack(QWidget):
     def __init__(self):
         super().__init__()
-
+        self.settings()
+        self.initUI()
+    
+    # Settings
+    def settings(self):
+        self.setWindowTitle("FitTrack")
+        self.resize(800,600)
+    
     # Init UI
     def initUI(self):
         self.date_box = QDateEdit()
@@ -34,7 +41,9 @@ class FitTrack(QWidget):
         self.dark_mode = QPushButton("Dark Mode")
 
         self.table = QTableWidget()
-
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["Id","Date","Calories","Distance","Description"])
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
@@ -58,3 +67,71 @@ class FitTrack(QWidget):
         self.sub_row4.addWidget(QLabel("Description:"))
         self.sub_row4.addWidget(self.description)
         
+        self.col1.addLayout(self.sub_row1)
+        self.col1.addLayout(self.sub_row2)
+        self.col1.addLayout(self.sub_row3)
+        self.col1.addLayout(self.sub_row4)
+        self.col1.addWidget(self.dark_mode)
+
+
+        btn_row1 = QHBoxLayout()
+        btn_row2 = QHBoxLayout()
+
+        btn_row1.addWidget(self.add_btn)
+        btn_row1.addWidget(self.delete_btn)
+        btn_row2.addWidget(self.submit_btn)
+        btn_row2.addWidget(self.clear_btn)
+
+        self.col1.addLayout(btn_row1)
+        self.col1.addLayout(btn_row2)
+
+
+        self.col2.addWidget(self.canvas)
+        self.col2.addWidget(self.table)
+
+        
+
+        self.master_layout.addLayout(self.col1, 30)
+        self.master_layout.addLayout(self.col2, 70)
+        self.setLayout(self.master_layout)
+    
+    # Load Tables
+
+    # Add Tables
+
+    # Delete Tables
+
+    # Calculate Calories
+
+    # Click
+
+    # Dark Mode
+
+    # Reset
+
+
+# Initialize my DB
+db = QSqlDatabase.addDatabase("QSQLITE")
+db.setDatabaseName("fitness.db")
+
+if not db.open():
+    QMessageBox.critical(None,"ERROR","Can not open the Database")
+    exit(2)
+
+query = QSqlQuery()
+query.exec_("""
+           CREATE TABLE IF NOT EXISTS fitness {
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT,
+                calories REAL,
+                distance REAL,
+                description TEXT
+            }
+            """)
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    main = FitTrack()
+    main.show()
+    app.exec_()
