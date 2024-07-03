@@ -104,7 +104,8 @@ class FitTrack(QWidget):
         self.add_btn.clicked.connect(self.add_workout)
         self.delete_btn.clicked.connect(self.delete_workout)
         self.submit_btn.clicked.connect(self.calculate_calories)
-        self.dark_mode.clicked.connect(self.toggle_dark)
+        self.dark_mode.stateChanged.connect(self.toggle_dark)
+        self.clear_btn.clicked.connect(self.reset)
     
     
     # Load Tables
@@ -293,6 +294,13 @@ class FitTrack(QWidget):
 
 
     # Reset
+    def reset(self):
+        self.date_box.setDate(QDate.currentDate())
+        self.kal_box.clear()
+        self.distance_box.clear()
+        self.description.clear()
+        self.figure.clear()
+        self.canvas.draw()
 
 
 # Initialize my DB
