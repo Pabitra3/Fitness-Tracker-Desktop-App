@@ -17,6 +17,8 @@ class FitTrack(QWidget):
         self.settings()
         self.initUI()
         self.button_click()
+        self.dark_mode = QPushButton("Dark Mode")
+        self.dark_mode.setCheckable(True)
     
     # Settings
     def settings(self):
@@ -104,7 +106,7 @@ class FitTrack(QWidget):
         self.add_btn.clicked.connect(self.add_workout)
         self.delete_btn.clicked.connect(self.delete_workout)
         self.submit_btn.clicked.connect(self.calculate_calories)
-        self.dark_mode.stateChanged.connect(self.toggle_dark)
+        self.dark_mode.clicked.connect(self.toggle_dark)
         self.clear_btn.clicked.connect(self.reset)
     
     
@@ -290,6 +292,10 @@ class FitTrack(QWidget):
     
     # Dark Mode
     def toggle_dark(self):
+        if self.dark_mode.isChecked():
+           self.dark_mode.setText("Light Mode")
+        else:
+           self.dark_mode.setText("Dark Mode")
         self.apply_styles()
 
 
@@ -313,13 +319,13 @@ if not db.open():
 
 query = QSqlQuery()
 query.exec_("""
-           CREATE TABLE IF NOT EXISTS fitness {
+           CREATE TABLE IF NOT EXISTS fitness (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date TEXT,
                 calories REAL,
                 distance REAL,
                 description TEXT
-            }
+            )
             """)
 
 
