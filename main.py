@@ -101,6 +101,7 @@ class FitTrack(QWidget):
     # Events
     def button_click(self):
         self.add_btn.clicked.connect(self.add_workout)
+        self.delete_btn.clicked.connect(self.delete_workout)
     
     
     # Load Tables
@@ -147,11 +148,28 @@ class FitTrack(QWidget):
 
         self.load_table()
 
-
     # Delete Tables
     def delete_workout(self):
         selected_row = self.table.currentRow()
+
+        if selected_row == -1:
+            QMessageBox.warning(self,"Error","Please choose a row to delete")
+
+        fit_id = int(self.table.item(selected_row,0).text())
+        confirm = QMessageBox.question(self,"Are you sure?","Delete the workout", QMessageBox.Yes | QMessageBox.No)
+
+        if confirm == QMessageBox.No:
+            return
+
+        query = QSqlQuery()
+        query.prepare("DELETE FROM fitness WHERE id = ?")
+        query.addBindValue(fit_id)
+        query.exec_()
+    
+        self.load_table()
+    
     # Calculate Calories
+    
 
     # Click
 
