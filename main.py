@@ -95,7 +95,8 @@ class FitTrack(QWidget):
         self.master_layout.addLayout(self.col1, 30)
         self.master_layout.addLayout(self.col2, 70)
         self.setLayout(self.master_layout)
-
+        
+        self.apply_styles()
         self.load_table()
     
     # Events
@@ -103,6 +104,7 @@ class FitTrack(QWidget):
         self.add_btn.clicked.connect(self.add_workout)
         self.delete_btn.clicked.connect(self.delete_workout)
         self.submit_btn.clicked.connect(self.calculate_calories)
+        self.dark_mode.stateChanged.connect(self.toggle_dark)
     
     
     # Load Tables
@@ -199,10 +201,96 @@ class FitTrack(QWidget):
         except Exception as e:
             print("ERROR:{e}")
             QMessageBox.warning(self,"Error","Please enter some data first!")        
+    
 
-    # Click
+    def apply_styles(self):
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #b8c9e1;
+            }
 
+            QLabel {
+                color: #333;
+                font-size: 14px;
+            }
+
+            QLineEdit, QComboBox, QDateEdit {
+                background-color: #b8c9e1;
+                color: #333;
+                border: 1px solid #444;
+                padding: 5px;
+            }
+
+            QTableWidget {
+                background-color: #b8c9e1;
+                color: #333;
+                border: 1px solid #444;
+                selection-background-color: #ddd;
+            }
+
+            QPushButton {
+                background-color: #4caf50;
+                color: #fff;
+                border: none;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+        figure_color = "#b8c9e1"
+        self.figure.patch.set_facecolor(figure_color)
+        self.canvas.setStyleSheet(f"background-color:{figure_color}")
+
+        if self.dark_mode.isChecked():
+            self.setStyleSheet("""
+                FitnessApp {
+                    background-color: #222222;
+                }
+
+                QLineEdit, QComboBox, QDateEdit {
+                    background-color: #222222;
+                    color: #eeeeee;
+                    border: 1px solid #444;
+                    padding: 5px;
+                }
+                               
+                QLabel {
+                    background-color: #222222;
+                    color: #eeeeee;
+                    padding: 5px;
+                }
+
+                QTableWidget {
+                    background-color: #444444;
+                    color: #eeeeee;
+                }
+                               
+                QCheckBox {
+                    color: #eeeeee;
+                }
+                QPushButton {
+                    background-color: #40484c;
+                    color: #fff;
+                    border: none;
+                    padding: 8px 16px;
+                    font-size: 14px;
+                }
+
+                QPushButton:hover {
+                    background-color: #444d4f;
+                }   
+            """)
+            figure_color = "#40484c"
+            self.figure.patch.set_facecolor(figure_color)
+            self.canvas.setStyleSheet(f"background-color:{figure_color}")
+    
     # Dark Mode
+    def toggle_dark(self):
+        self.apply_styles()
+
 
     # Reset
 
